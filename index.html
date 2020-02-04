@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+<!--BOOSTRAP CDN  -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  </head>
+
+
+  <body>
+    <nav class="navbar navbar-expand-md navbar-danger bg-danger"><a class="navbar-brand text-light font-weight-bold" href="/">Restaurant</a><div class="navbar-nav text-light badge badge-pill badge-info"><p class="navbar-text pt-4 mr-2">my position</p><p class="navbar-text pt-4 mr-2 ">xxxx</p><p class="navbar-text pt-4 mr-2 ">PT</p><p class="navbar-text pt-4 mr-2 ">x</p></div></nav>
+    <div id="map"></div>
+
+
+
+
+
+
+<!-- MAP OPTIONS -->
+    <script>
+      var map;
+      var marker;
+
+      var options = {
+        zoom:12,
+        center:{lat:39.403930, lng:-9.133779}
+      }
+
+
+      function initMap() {
+        // NEW MAP
+        map = new google.maps.Map(document.getElementById('map'), options);
+
+
+        // Add marker
+        marker = new google.maps.Marker({
+          position:{lat:39.406610, lng:-9.136625},
+          map:map
+        });
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBK3wNiWSgNmFc_OatZiq-icYBdtOfsuA&callback=initMap"
+    async defer></script>
+  </body>
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</html>
