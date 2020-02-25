@@ -1,62 +1,196 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Simple Map</title>
-    <meta name="viewport" content="initial-scale=1.0">
-    <meta charset="utf-8">
-    <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-<!--BOOSTRAP CDN  -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!--page setup-->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="logo-nbg.png" type="image/icon"/>
+    <title>RestoHit : Avis de restaurant</title>
+<!--  bootstrap and css setup -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
+    <!-- <script src="https://kit.fontawesome.com/8b1a29674e.js"></script> -->
   </head>
 
-
   <body>
-    <nav class="navbar navbar-expand-md navbar-danger bg-danger"><a class="navbar-brand text-light font-weight-bold" href="/">Restaurant</a><div class="navbar-nav text-light badge badge-pill badge-info"><p class="navbar-text pt-4 mr-2">my position</p><p class="navbar-text pt-4 mr-2 ">xxxx</p><p class="navbar-text pt-4 mr-2 ">PT</p><p class="navbar-text pt-4 mr-2 ">x</p></div></nav>
-    <div id="map"></div>
+    <header>
+        <!-- <div class="logo"> -->
+            <img src="logo-nbg.png">
+        <!-- </div> -->
+        <h1 class="siteName"><span>Resto</span>Hit</h1>
+    </header>
 
+<div class="container-fluid">
+    <div class="row">
+        <div id="floating-panel">
+            <button type="button" class="btn btn-outline-primary btn-sm" id="searchAreaButton">Rechercher dans cette zone</button>
+        </div>
+        <!-- <div id="pac-container">
+            <input id="pac-input" type="text" placeholder="Chercher par restaurant">
+        </div> -->
 
+        <div id="map" class="col-xl-9 col-lg-8 col-sm-12"></div>
+        <div id="list-wrap" class="col-xl-3 col-lg-4 col-sm-12">
+            <div id="sort-option" class="sort" style="display: block;">
+                <label for = "sort">Min</label>
+                <select name="sort" id="sortMinStars">
+                    <option value="0">0 étoile</option>
+                    <option value="1">1 étoile</option>
+                    <option value="2">2 étoiles</option>
+                    <option value="3">3 étoiles</option>
+                    <option value="4">4 étoiles</option>
+                    <option value="5">5 étoiles</option>
+                </select>
 
+                <label for = "sort">Max</label>
+                <select name="sort" id="sortMaxStars">
+                    <!-- <option value="maxAllStars" disabled="disabled">Tout</option> -->
+                    <option value="1">1 étoile</option>
+                    <option value="2">2 étoiles</option>
+                    <option value="3">3 étoiles</option>
+                    <option value="4">4 étoiles</option>
+                    <option value="5" selected>5 étoiles</option>
+                </select>
+            </div>
+            <div id="listOfRestaurants">
+                
+            </div>
+        </div>
+        <div id="box-showRestaurantDetails" class="col-xl-3 col-lg-4 col-sm-12">
+            <div class="buttonReturnAndNewReview">
+                <button type="button" class="btn btn-light btn-sm" id="returnToList"><i class="fas fa-arrow-left"></i> Retourner</button>
+                <button type="button" class="btn btn-light btn-sm" id="addNewReview" data-toggle="modal" data-target="#form-addComment"><i class="fas fa-plus"></i> Ajouter un avis</button>
+            </div>
+            <div id="showRestaurantDetails">
+                <div class="streetView"></div>
+                <div class="showName"></div>
+                <div class="showStar">
+                        <span class="showRating"></span>
+                </div>
+                <div class="showAdress"></div>
+                <div class="showComment"></div>
+            </div>
+        </div>
+        <div class="modal fade" id="form-addComment" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form action="#" id="form-addNewComment">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="title-addComment">Ajouter un avis</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <label for="your-rating">Donnez votre avis afin d'aider les autres utilisateurs</label>
+                            <select name="your-rating" id="your-rating" required>
+                                <option disabled selected value>Note</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                            <textarea name="your-review" id="your-review" placeholder="Partager les détails de votre expérience à cet endroit" required></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" id="cancelAddingComment" data-dismiss="modal">Fermer</button>
+                            <button class="btn btn-primary"  type="submit" value="Ajouter" id="submitNewComment" >Ajouter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="modal fade" id="addNewPlace" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form action="#" id="form-addNewPlace">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addNewPlaceTitle">Ajouter un nouveau endroit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label for="validationCustom01">Nom de cet endroit</label>
+                <input type="text" class="form-control" id="inputNewName" placeholder="Nom de cet endroit"  required>
+                <div class="form-row" id="groupInputAdress">
+                    <div class="col-md-6 mb-3">
+                        <label for="validationCustom03">Adresse</label>
+                        <input type="text" class="form-control" id="inputAddress" placeholder="L'adresse de cet endroit" required>
+                        <div class="invalid-feedback">
+                            Veuillez ajouter une adresse.
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="validationCustom04">Ville</label>
+                        <input type="text" class="form-control" id="inputCity" placeholder="Ville" required>
+                        <div class="invalid-feedback">
+                                Veuillez ajouter une ville.
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="validationCustom05">Code postale</label>
+                        <input type="text" class="form-control" id="inputZipCode" placeholder="CP" required>
+                        <div class="invalid-feedback">
+                                Veuillez ajouter le code postale.
+                        </div>
+                    </div>
+                </div> 
+                <div class="form-row" required>
+                    <label for="labelRatingOptions" id="labelRatingOptions">Donnez votre avis </label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1">
+                        <label class="form-check-label" for="inlineRadio1">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2">
+                        <label class="form-check-label" for="inlineRadio2">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="3">
+                        <label class="form-check-label" for="inlineRadio2">3</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="4">
+                        <label class="form-check-label" for="inlineRadio2">4</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio5" value="5" checked="checked">
+                        <label class="form-check-label" for="inlineRadio2">5</label>
+                    </div>                
+                </div> 
+                <textarea name="reviewForNewPlace" id="reviewForNewPlace" placeholder="Partager les détails de votre expérience à cet endroit" required></textarea>   
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="closeAddingPlace" data-dismiss="modal">Fermer</button>
+                <button type="submit" class="btn btn-primary" id="confirmAddingPlace">Publier</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-
-<!-- MAP OPTIONS -->
-    <script>
-      var map;
-      var marker;
-
-      var options = {
-        zoom:12,
-        center:{lat:39.403930, lng:-9.133779}
-      }
-
-
-      function initMap() {
-        // NEW MAP
-        map = new google.maps.Map(document.getElementById('map'), options);
-
-
-        // Add marker
-        marker = new google.maps.Marker({
-          position:{lat:39.406610, lng:-9.136625},
-          map:map
-        });
-      }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBK3wNiWSgNmFc_OatZiq-icYBdtOfsuA&callback=initMap"
-    async defer></script>
-  </body>
-
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- script setup jQuery before bootstrap -->
+    <script 
+    src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="listRestaurants.js"></script>
+    <script src="script.js"></script> 
+    <script src="initMap.js"></script> 
+    <script src="classManageRestaurant.js"></script> 
+    <script src="classMyMap.js"></script> 
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqxE4oHzIGt8Bg9Eb3yhjz6-arNbRbE5A&callback=initMap&libraries=places">
+    </script> 
+    <script src="https://kit.fontawesome.com/8b1a29674e.js"></script>
+</body>
 </html>
